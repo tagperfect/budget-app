@@ -1,19 +1,57 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Form @submitForm="onFormSubmit" />
+    <TotalBalance :total="totalBalance" />
+    <BudgetList :list="list" />
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import BudgetList from "@/components/BudgetList";
+import TotalBalance from "@/components/TotalBalance";
+import Form from "@/components/Form";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    HelloWorld
-  }
-}
+    BudgetList,
+    TotalBalance,
+    Form,
+  },
+  data: () => ({
+    list: {
+      1: {
+        type: "INCOME",
+        value: 100,
+        comment: "Some comment",
+        id: 1,
+      },
+      2: {
+        type: "EXPENSE",
+        value: -50,
+        comment: "Some expense",
+        id: 2,
+      },
+    },
+  }),
+  computed: {
+    totalBalance() {
+      return Object.values(this.list).reduce(
+        (acc, item) => acc + item.value,
+        0
+      );
+    },
+  },
+  methods: {
+    onFormSubmit(data) {
+      const newObj = {
+        ...data,
+        id: String(Math.floor(Math.random() * 1000)),
+      };
+      this.$set(this.list, newObj.id, newObj);
+    },
+  },
+};
 </script>
 
 <style>
